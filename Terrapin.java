@@ -1,4 +1,3 @@
-package com.craftinginterpreters.lox;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,13 +8,13 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Scanner;
 
-public class Lox {
+public class Terrapin {
 
     static boolean hadError = false;
 
     public static void main(String[] args) throws IOException {
         if (args.length > 1) {
-            System.out.println("Usage: jlox [script]");
+            System.out.println("Usage: terrapin [script]");
             System.exit(64);
         } else if (args.length == 1) {
             runFile(args[0]);
@@ -46,7 +45,7 @@ public class Lox {
         InputStreamReader input = new InputStreamReader(System.in);
         BufferedReader reader = new BufferedReader(input);
 
-        while (true) { // Need to use ctrl + c to escape
+        while (true) { // Need to use Ctrl + C to escape
             System.out.println("> ");
             run(reader.readLine());
             hadError = false;
