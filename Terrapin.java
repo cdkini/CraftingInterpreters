@@ -8,13 +8,13 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Scanner;
 
-public class Terrapin {
+public class Kumquat {
 
     static boolean hadError = false;
 
     public static void main(String[] args) throws IOException {
         if (args.length > 1) {
-            System.out.println("Usage: terrapin [script]");
+            System.out.println("Usage: kumquat [script]");
             System.exit(64);
         } else if (args.length == 1) {
             runFile(args[0]);
@@ -38,7 +38,7 @@ public class Terrapin {
     }
 
     /**
-     * Runs jlox directly in the command line
+     * Runs kumquat directly in the command line
      * @throws IOException
      */
     private static void runPrompt() throws IOException {
