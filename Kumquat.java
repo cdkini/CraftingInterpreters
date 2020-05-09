@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public class Kumquat {
 
-    static boolean hadError = false;
+    private static boolean hadError = false;
 
     public static void main(String[] args) throws IOException {
         if (args.length > 1) {
@@ -46,7 +46,7 @@ public class Kumquat {
         BufferedReader reader = new BufferedReader(input);
 
         while (true) { // Need to use Ctrl + C to escape
-            System.out.println("> ");
+            System.out.println("~ ");
             run(reader.readLine());
             hadError = false;
         }
@@ -65,7 +65,7 @@ public class Kumquat {
         }
     }
 
-    static void error(int line, String message) {
+    private static void error(int line, String message) {
         report(line, "", message);
     }
 
