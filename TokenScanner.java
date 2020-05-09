@@ -9,10 +9,14 @@ import static TokenType.*;
 public class TokenScanner {
 
     private final String source;
-    private final List<Token> tokens = new ArrayList<>();
+    private final List<Token> tokens;
+    private int start;
+    private int current;
+    private int line;
 
     TokenScanner(String source) {
         this.source = source;
+        this.tokens = new ArrayList<>();
         this.start = 0;
         this.current = 0;
         this.line = 1;
@@ -27,7 +31,7 @@ public class TokenScanner {
         return tokens;
     }
 
-    private void scanTokens() {
+    private void scanToken() {
         current++;
         char c = source.charAt(current - 1);
         switch (c) {
@@ -44,5 +48,12 @@ public class TokenScanner {
         }
     }
 
+    private void addToken(TokenType type) {
+        addToken(type, null);
+    }
 
+    private void addToken(TokenType type, Object literal) {
+        String text = source.substring(start, current);
+        tokens.add(new Token(type, text, literal, line));
+    }
 }

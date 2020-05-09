@@ -57,7 +57,7 @@ public class Kumquat {
      * @param source
      */
     private static void run(String source) {
-        Scanner scanner = new Scanner(source);
+        TokenScanner scanner = new TokenScanner(source);
         List<Token> tokens = scanner.scanTokens();
 
         for (Token token: tokens) {
