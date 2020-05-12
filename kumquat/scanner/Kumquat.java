@@ -1,3 +1,4 @@
+package kumquat.scanner;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,7 +7,6 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Scanner;
 
 public class Kumquat {
 
@@ -17,10 +17,21 @@ public class Kumquat {
             System.out.println("Usage: kumquat [script]");
             System.exit(64);
         } else if (args.length == 1) {
+            if (!getFileExtension(args[0]).equals("kqt")) {
+                System.out.println("Usage: kumquat [script] -> Must use .kqt extension");
+                System.exit(64);
+            }
             runFile(args[0]);
         } else {
             runPrompt();
         }
+    }
+
+    private static String getFileExtension(String script) {
+        if (script.lastIndexOf(".") != -1 && script.lastIndexOf(".") != 0) {
+            return script.substring(script.lastIndexOf(".") + 1);
+        }
+        return "";
     }
 
     /**
@@ -46,7 +57,7 @@ public class Kumquat {
         BufferedReader reader = new BufferedReader(input);
 
         while (true) { // Need to use Ctrl + C to escape
-            System.out.println("~ ");
+            System.out.println("> ");
             run(reader.readLine());
             hadError = false;
         }
@@ -57,15 +68,15 @@ public class Kumquat {
      * @param source
      */
     private static void run(String source) {
-        TokenScanner scanner = new TokenScanner(source);
-        List<Token> tokens = scanner.scanTokens();
+        TokenScanner tokenScanner = new TokenScanner(source);
+        List<Token> tokens = tokenScanner.scanTokens();
 
         for (Token token: tokens) {
             System.out.println(token);
         }
     }
 
-    private static void error(int line, String message) {
+    static void error(int line, String message) {
         report(line, "", message);
     }
 

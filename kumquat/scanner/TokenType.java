@@ -1,3 +1,4 @@
+package kumquat.scanner;
 
 enum TokenType {
     // Single-character tokens.

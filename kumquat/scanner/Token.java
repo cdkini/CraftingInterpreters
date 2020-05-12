@@ -1,3 +1,4 @@
+package kumquat.scanner;
 
 public class Token {
     final TokenType type;
