@@ -1,8 +1,9 @@
 package kumquat.scanner;
 
-import javax.management.BadAttributeValueExpException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static kumquat.scanner.TokenType.*;
 
@@ -10,6 +11,26 @@ public class TokenScanner {
 
     private final String source;
     private final List<Token> tokens;
+    private static final Map<String, TokenType> keywords;
+    static {
+        keywords = new HashMap<>();
+        keywords.put("and",    AND);
+        keywords.put("class",  CLASS);
+        keywords.put("else",   ELSE);
+        keywords.put("false",  FALSE);
+        keywords.put("for",    FOR);
+        keywords.put("fun",    FUN);
+        keywords.put("if",     IF);
+        keywords.put("nil",    NIL);
+        keywords.put("or",     OR);
+        keywords.put("print",  PRINT);
+        keywords.put("return", RETURN);
+        keywords.put("super",  SUPER);
+        keywords.put("this",   THIS);
+        keywords.put("true",   TRUE);
+        keywords.put("var",    VAR);
+        keywords.put("while",  WHILE);
+    }
     private int start;
     private int current;
     private int line;
@@ -37,7 +58,7 @@ public class TokenScanner {
 
     private void scanToken() {
         current++;
-        char c = source.charAt(current - 1);
+        char c = advance();
         switch (c) {
             case '(':
                 addToken(LEFT_PAREN); break;
@@ -89,14 +110,81 @@ public class TokenScanner {
                 break;
 
             default:
-                Kumquat.error(line, "Unexpected character.");
-                break;
+                if (isDigit(c)) {
+                    number();
+                } else if (isAlpha(c)) {
+                    identifier();
+                } else {
+                    Kumquat.error(line, "Unexpected character.");
+                    break;
+                }
         }
     }
 
+    private void identifier() {
+        while (isAlphaNumeric(peek())) {
+            advance();
+        }
+        addToken(IDENTIFIER);
+    }
+
+    private boolean isAlpha(char c) {
+        return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
+    }
+
+    private boolean isAlphaNumeric(char c) {
+        return isAlpha(c) || isDigit(c);
+    }
+
+    private boolean isDigit(char c) {
+        return c >= '0' && c <= '9';
+    }
+
+    private void number() {
+        while (isDigit(peek())) {
+            advance();
+        }
+
+        if (peek() == '.' && isDigit(peekNext())) {
+            advance();
+
+            while (isDigit(peek())) {
+                advance();
+            }
+        }
+
+        addToken(NUMBER, Double.parseDouble(source.substring(start, current)));
+    }
+
+    private char peekNext() {
+        if (current + 1 >= source.length()) {
+            return '\0';
+        }
+        return source.charAt(current + 1);
+    }
+
+    private char advance() {
+        current++;
+        return source.charAt(current - 1);
+    }
+
     private void string() {
-        while (peek() != '"' && !isAtEnd())
-            // TODO: Left off here!
+        while (peek() != '"' && !isAtEnd()) {
+            if (peek() == '\n') {
+                line++;
+                advance();
+            }
+        }
+
+        if (isAtEnd()) {
+            Kumquat.error(line, "Unterminated string.");
+            return;
+        }
+
+        advance();
+
+        String value = source.substring(start + 1, current - 1);
+        addToken(STRING, value);
     }
 
     private char peek() {
