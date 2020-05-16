@@ -3,14 +3,15 @@ package kumquat.scanner;
 import java.util.ArrayList;
 import java.util.List;
 
+import static kumquat.scanner.KeywordsDict.get;
 import static kumquat.scanner.TokenType.*;
 
 public class TokenScanner {
 
     private final String source;
     private final List<Token> tokens;
-    private int start;
-    private int current;
+    private int start; // First char in the lexeme being evaluated
+    private int current; // Current char in the lexeme being evaluated
     private int line;
 
     TokenScanner(String source) {
@@ -31,9 +32,13 @@ public class TokenScanner {
     }
 
     private void scan() {
+
         current++;
         char c = advance();
+
         switch (c) {
+
+            // Single character tokens
             case '(': addToken(LEFT_PAREN); break;
             case ')': addToken(RIGHT_PAREN); break;
             case '{': addToken(LEFT_BRACE); break;
@@ -44,10 +49,14 @@ public class TokenScanner {
             case '+': addToken(PLUS); break;
             case ';': addToken(SEMICOLON); break;
             case '*': addToken(STAR); break;
+
+            // Tokens that can be either one or two characters
             case '!': addToken(match('=') ? BANG_EQUAL: BANG); break;
             case '=': addToken(match('=') ? EQUAL_EQUAL: EQUAL); break;
             case '<': addToken(match('=') ? LESS_EQUAL: LESS); break;
             case '>': addToken(match('=') ? GREATER_EQUAL: GREATER); break;
+
+            // If a comment (//), the rest of the line is advanced without being consumption
             case '/':
                 if (match('/')) {
                     // A comment goes on until EOL
@@ -58,21 +67,25 @@ public class TokenScanner {
                     addToken(SLASH);
                 }
                 break;
+
+            // We don't care about whitespace so disregard if character is one of the following
             case ' ':
             case '\r':
             case '\t': break;
             case '\n': line++; break;
+
+            // Remainder are delegated to string/number specific helper methods or error handling
             case '"':
                 string();
                 break;
 
             default:
-                if (isDigit(c)) {
+                if (Character.isDigit(c)) {
                     number();
-                } else if (isAlpha(c)) {
+                } else if (Character.isAlphabetic(c)) {
                     identifier();
                 } else {
-                    Kumquat.error(line, "Unexpected character.");
+                    Kumquat.error(line, "Invalid character.");
                     break;
                 }
         }
@@ -95,41 +108,16 @@ public class TokenScanner {
         tokens.add(new Token(type, text, literal, line));
     }
 
-    // TODO: Where you left off
+    private char advance() {
+        current++;
+        return source.charAt(current - 1);
+    }
 
-    private void identifier() {
-        while (isAlphaNumeric(peek())) {
-            advance();
+    private char peek() {
+        if (current >= source.length()) {
+            return '\0';
         }
-        addToken(IDENTIFIER);
-    }
-
-    private boolean isAlpha(char c) {
-        return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
-    }
-
-    private boolean isAlphaNumeric(char c) {
-        return isAlpha(c) || isDigit(c);
-    }
-
-    private boolean isDigit(char c) {
-        return c >= '0' && c <= '9';
-    }
-
-    private void number() {
-        while (isDigit(peek())) {
-            advance();
-        }
-
-        if (peek() == '.' && isDigit(peekNext())) {
-            advance();
-
-            while (isDigit(peek())) {
-                advance();
-            }
-        }
-
-        addToken(NUMBER, Double.parseDouble(source.substring(start, current)));
+        return source.charAt(current);
     }
 
     private char peekNext() {
@@ -139,11 +127,6 @@ public class TokenScanner {
         return source.charAt(current + 1);
     }
 
-    private char advance() {
-        current++;
-        return source.charAt(current - 1);
-    }
-
     private void string() {
         while (peek() != '"' && current < source.length()) {
             if (peek() == '\n') {
@@ -151,22 +134,37 @@ public class TokenScanner {
                 advance();
             }
         }
-
         if (current >= source.length()) {
             Kumquat.error(line, "Unterminated string.");
             return;
         }
-
         advance();
-
         String value = source.substring(start + 1, current - 1);
         addToken(STRING, value);
     }
 
-    private char peek() {
-        if (current >= source.length()) {
-            return '\0';
+    private void number() {
+        while (Character.isDigit(peek())) {
+            advance();
         }
-        return source.charAt(current);
+        if (peek() == '.' && Character.isDigit(peekNext())) {
+            advance();
+            while (Character.isDigit(peek())) {
+                advance();
+            }
+        }
+        addToken(NUMBER, Double.parseDouble(source.substring(start, current)));
+    }
+
+    private void identifier() {
+        while (Character.isAlphabetic(peek()) || Character.isDigit(peek())) {
+            advance();
+        }
+        TokenType type = KeywordsDict.get(source.substring(start, current));
+        if (type == null) {
+            addToken(IDENTIFIER);
+        } else {
+            addToken(type);
+        }
     }
 }
