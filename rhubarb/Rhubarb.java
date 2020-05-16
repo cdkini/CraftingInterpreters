@@ -14,7 +14,7 @@ public class Rhubarb {
 
     public static void main(String[] args) throws IOException {
         if (args.length > 2) {
-            System.out.println("Error: Must use one of the following: \n " +
+            System.out.println("Error: Must use one of the following: \n" +
                     "1) \"rhubarb [script]\" to run a .rhu file \n" +
                     "2) \"rhubarb\" to run an interactive session in the terminal \n" +
                     "3) \"rhubarb fmt [script]\" to format a .rhu file");
