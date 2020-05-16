@@ -1,4 +1,4 @@
-package kumquat.scanner;
+package rhubarb;
 
 public class Token {
     final TokenType type;

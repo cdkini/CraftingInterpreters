@@ -1,4 +1,4 @@
-package kumquat.scanner;
+package rhubarb;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,18 +8,27 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-public class Kumquat {
+public class Rhubarb {
 
     private static boolean hadError = false;
 
     public static void main(String[] args) throws IOException {
-        if (args.length > 1) {
-            System.out.println("Error: Must use \"kumquat [script]\" to run a " +
-                    ".kqt file or \"kumquat\" for interactive mode.");
+        if (args.length > 2) {
+            System.out.println("Error: Must use one of the following: \n " +
+                    "1) \"rhubarb [script]\" to run a .rhu file \n" +
+                    "2) \"rhubarb\" to run an interactive session in the terminal \n" +
+                    "3) \"rhubarb fmt [script]\" to format a .rhu file");
             System.exit(-1);
+        } else if (args.length == 2) {
+            if (!getFileExtension(args[0]).equals("fmt") || !getFileExtension(args[1]).equals("rhu")) {
+                System.out.println("Error: Must use \"rhubarb fmt [script]\" to format a .rhu file");
+                System.exit(-1);
+            }
+            // TODO: Open to implement formatting tool once completion of basic language / style rules
+            System.out.println("fmt not yet implemented!");
         } else if (args.length == 1) {
-            if (!getFileExtension(args[0]).equals("kqt")) {
-                System.out.println("Error: Must use .kqt file extension");
+            if (!getFileExtension(args[0]).equals("rhu")) {
+                System.out.println("Error: Must use .rhu file extension");
                 System.exit(-1);
             }
             runFile(args[0]);

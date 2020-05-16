@@ -1,4 +1,4 @@
-package kumquat.scanner.tests;
+package rhubarb.tests;
 
 public class TestTokenScanner {
 }

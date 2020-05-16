@@ -1,4 +1,4 @@
-package kumquat.scanner;
+package rhubarb;
 
 enum TokenType {
     // Single-character tokens.

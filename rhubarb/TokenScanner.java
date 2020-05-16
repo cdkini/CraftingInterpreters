@@ -1,10 +1,7 @@
-package kumquat.scanner;
+package rhubarb;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static kumquat.scanner.KeywordsDict.get;
-import static kumquat.scanner.TokenType.*;
 
 public class TokenScanner {
 
@@ -27,7 +24,7 @@ public class TokenScanner {
             start = current;
             scan();
         }
-        tokens.add(new Token(EOF, "", null, line));
+        tokens.add(new Token(TokenType.EOF, "", null, line));
         return tokens;
     }
 
@@ -39,22 +36,22 @@ public class TokenScanner {
         switch (c) {
 
             // Single character tokens
-            case '(': addToken(LEFT_PAREN); break;
-            case ')': addToken(RIGHT_PAREN); break;
-            case '{': addToken(LEFT_BRACE); break;
-            case '}': addToken(RIGHT_BRACE); break;
-            case ',': addToken(COMMA); break;
-            case '.': addToken(DOT); break;
-            case '-': addToken(MINUS); break;
-            case '+': addToken(PLUS); break;
-            case ';': addToken(SEMICOLON); break;
-            case '*': addToken(STAR); break;
+            case '(': addToken(TokenType.LEFT_PAREN); break;
+            case ')': addToken(TokenType.RIGHT_PAREN); break;
+            case '{': addToken(TokenType.LEFT_BRACE); break;
+            case '}': addToken(TokenType.RIGHT_BRACE); break;
+            case ',': addToken(TokenType.COMMA); break;
+            case '.': addToken(TokenType.DOT); break;
+            case '-': addToken(TokenType.MINUS); break;
+            case '+': addToken(TokenType.PLUS); break;
+            case ';': addToken(TokenType.SEMICOLON); break;
+            case '*': addToken(TokenType.STAR); break;
 
             // Tokens that can be either one or two characters
-            case '!': addToken(match('=') ? BANG_EQUAL: BANG); break;
-            case '=': addToken(match('=') ? EQUAL_EQUAL: EQUAL); break;
-            case '<': addToken(match('=') ? LESS_EQUAL: LESS); break;
-            case '>': addToken(match('=') ? GREATER_EQUAL: GREATER); break;
+            case '!': addToken(match('=') ? TokenType.BANG_EQUAL: TokenType.BANG); break;
+            case '=': addToken(match('=') ? TokenType.EQUAL_EQUAL: TokenType.EQUAL); break;
+            case '<': addToken(match('=') ? TokenType.LESS_EQUAL: TokenType.LESS); break;
+            case '>': addToken(match('=') ? TokenType.GREATER_EQUAL: TokenType.GREATER); break;
 
             // If a comment (//), the rest of the line is advanced without being consumption
             case '/':
@@ -64,7 +61,7 @@ public class TokenScanner {
                         advance();
                     }
                 } else {
-                    addToken(SLASH);
+                    addToken(TokenType.SLASH);
                 }
                 break;
 
@@ -85,7 +82,7 @@ public class TokenScanner {
                 } else if (Character.isAlphabetic(c)) {
                     identifier();
                 } else {
-                    Kumquat.error(line, "Invalid character.");
+                    Rhubarb.error(line, "Invalid character.");
                     break;
                 }
         }
@@ -135,12 +132,12 @@ public class TokenScanner {
             }
         }
         if (current >= source.length()) {
-            Kumquat.error(line, "Unterminated string.");
+            Rhubarb.error(line, "Unterminated string.");
             return;
         }
         advance();
         String value = source.substring(start + 1, current - 1);
-        addToken(STRING, value);
+        addToken(TokenType.STRING, value);
     }
 
     private void number() {
@@ -153,7 +150,7 @@ public class TokenScanner {
                 advance();
             }
         }
-        addToken(NUMBER, Double.parseDouble(source.substring(start, current)));
+        addToken(TokenType.NUMBER, Double.parseDouble(source.substring(start, current)));
     }
 
     private void identifier() {
@@ -162,7 +159,7 @@ public class TokenScanner {
         }
         TokenType type = KeywordsDict.get(source.substring(start, current));
         if (type == null) {
-            addToken(IDENTIFIER);
+            addToken(TokenType.IDENTIFIER);
         } else {
             addToken(type);
         }
