@@ -1,9 +1,7 @@
 package kumquat.scanner;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static kumquat.scanner.TokenType.*;
 
@@ -11,26 +9,6 @@ public class TokenScanner {
 
     private final String source;
     private final List<Token> tokens;
-    private static final Map<String, TokenType> keywords;
-    static {
-        keywords = new HashMap<>();
-        keywords.put("and",    AND);
-        keywords.put("class",  CLASS);
-        keywords.put("else",   ELSE);
-        keywords.put("false",  FALSE);
-        keywords.put("for",    FOR);
-        keywords.put("fun",    FUN);
-        keywords.put("if",     IF);
-        keywords.put("nil",    NIL);
-        keywords.put("or",     OR);
-        keywords.put("print",  PRINT);
-        keywords.put("return", RETURN);
-        keywords.put("super",  SUPER);
-        keywords.put("this",   THIS);
-        keywords.put("true",   TRUE);
-        keywords.put("var",    VAR);
-        keywords.put("while",  WHILE);
-    }
     private int start;
     private int current;
     private int line;
@@ -43,55 +21,37 @@ public class TokenScanner {
         this.line = 1;
     }
 
-    List<Token> scanTokens() {
-        while (isAtEnd()) {
+    public List<Token> scanTokens() {
+        while (current < source.length()) {
             start = current;
-            scanTokens();
+            scan();
         }
         tokens.add(new Token(EOF, "", null, line));
         return tokens;
     }
 
-    private boolean isAtEnd() {
-        return current >= source.length();
-    }
-
-    private void scanToken() {
+    private void scan() {
         current++;
         char c = advance();
         switch (c) {
-            case '(':
-                addToken(LEFT_PAREN); break;
-            case ')':
-                addToken(RIGHT_PAREN); break;
-            case '{':
-                addToken(LEFT_BRACE); break;
-            case '}':
-                addToken(RIGHT_BRACE); break;
-            case ',':
-                addToken(COMMA); break;
-            case '.':
-                addToken(DOT); break;
-            case '-':
-                addToken(MINUS); break;
-            case '+':
-                addToken(PLUS); break;
-            case ';':
-                addToken(SEMICOLON); break;
-            case '*':
-                addToken(STAR); break;
-            case '!':
-                addToken(match('=') ? BANG_EQUAL: BANG); break;
-            case '=':
-                addToken(match('=') ? EQUAL_EQUAL: EQUAL); break;
-            case '<':
-                addToken(match('=') ? LESS_EQUAL: LESS); break;
-            case '>':
-                addToken(match('=') ? GREATER_EQUAL: GREATER); break;
+            case '(': addToken(LEFT_PAREN); break;
+            case ')': addToken(RIGHT_PAREN); break;
+            case '{': addToken(LEFT_BRACE); break;
+            case '}': addToken(RIGHT_BRACE); break;
+            case ',': addToken(COMMA); break;
+            case '.': addToken(DOT); break;
+            case '-': addToken(MINUS); break;
+            case '+': addToken(PLUS); break;
+            case ';': addToken(SEMICOLON); break;
+            case '*': addToken(STAR); break;
+            case '!': addToken(match('=') ? BANG_EQUAL: BANG); break;
+            case '=': addToken(match('=') ? EQUAL_EQUAL: EQUAL); break;
+            case '<': addToken(match('=') ? LESS_EQUAL: LESS); break;
+            case '>': addToken(match('=') ? GREATER_EQUAL: GREATER); break;
             case '/':
                 if (match('/')) {
                     // A comment goes on until EOL
-                    while (peek() != '\n' && !isAtEnd()) {
+                    while (peek() != '\n' && current < source.length()) {
                         advance();
                     }
                 } else {
@@ -100,11 +60,8 @@ public class TokenScanner {
                 break;
             case ' ':
             case '\r':
-            case '\t':
-                break;
-            case '\n':
-                line++;
-                break;
+            case '\t': break;
+            case '\n': line++; break;
             case '"':
                 string();
                 break;
@@ -120,6 +77,25 @@ public class TokenScanner {
                 }
         }
     }
+
+    private boolean match(char expected) {
+        if (current >= source.length() || source.charAt(current) != expected) {
+            return false;
+        }
+        current++;
+        return true;
+    }
+
+    private void addToken(TokenType type) {
+        addToken(type, null);
+    }
+
+    private void addToken(TokenType type, Object literal) {
+        String text = source.substring(start, current);
+        tokens.add(new Token(type, text, literal, line));
+    }
+
+    // TODO: Where you left off
 
     private void identifier() {
         while (isAlphaNumeric(peek())) {
@@ -169,14 +145,14 @@ public class TokenScanner {
     }
 
     private void string() {
-        while (peek() != '"' && !isAtEnd()) {
+        while (peek() != '"' && current < source.length()) {
             if (peek() == '\n') {
                 line++;
                 advance();
             }
         }
 
-        if (isAtEnd()) {
+        if (current >= source.length()) {
             Kumquat.error(line, "Unterminated string.");
             return;
         }
@@ -188,26 +164,9 @@ public class TokenScanner {
     }
 
     private char peek() {
-        if (isAtEnd()) {
+        if (current >= source.length()) {
             return '\0';
         }
         return source.charAt(current);
-    }
-
-    private boolean match(char expected) {
-        if (isAtEnd() || source.charAt(current) != expected) {
-            return false;
-        }
-        current++;
-        return true;
-    }
-
-    private void addToken(TokenType type) {
-        addToken(type, null);
-    }
-
-    private void addToken(TokenType type, Object literal) {
-        String text = source.substring(start, current);
-        tokens.add(new Token(type, text, literal, line));
     }
 }

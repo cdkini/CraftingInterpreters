@@ -14,12 +14,13 @@ public class Kumquat {
 
     public static void main(String[] args) throws IOException {
         if (args.length > 1) {
-            System.out.println("Usage: kumquat [script]");
-            System.exit(64);
+            System.out.println("Error: Must use \"kumquat [script]\" to run a " +
+                    ".kqt file or \"kumquat\" for interactive mode.");
+            System.exit(-1);
         } else if (args.length == 1) {
             if (!getFileExtension(args[0]).equals("kqt")) {
-                System.out.println("Usage: kumquat [script] -> Must use .kqt extension");
-                System.exit(64);
+                System.out.println("Error: Must use .kqt file extension");
+                System.exit(-1);
             }
             runFile(args[0]);
         } else {
@@ -34,24 +35,15 @@ public class Kumquat {
         return "";
     }
 
-    /**
-     * Takes a path to a file, reads the file, and executes it
-     * @param path -> Path to file we want to run
-     * @throws IOException
-     */
     private static void runFile(String path) throws IOException {
         byte[] bytes = Files.readAllBytes(Paths.get(path));
         run(new String(bytes, Charset.defaultCharset()));
 
         if (hadError) {
-            System.exit(65);
+            System.exit(-1);
         }
     }
 
-    /**
-     * Runs kumquat directly in the command line
-     * @throws IOException
-     */
     private static void runPrompt() throws IOException {
         InputStreamReader input = new InputStreamReader(System.in);
         BufferedReader reader = new BufferedReader(input);
@@ -63,10 +55,6 @@ public class Kumquat {
         }
     }
 
-    /**
-     *
-     * @param source
-     */
     private static void run(String source) {
         TokenScanner tokenScanner = new TokenScanner(source);
         List<Token> tokens = tokenScanner.scanTokens();
