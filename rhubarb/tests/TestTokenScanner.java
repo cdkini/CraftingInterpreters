@@ -1,11 +1,11 @@
 package rhubarb.tests;
 
 import static org.junit.Assert.*;
-import static rhubarb.TokenType.*;
+import static rhubarb.parser.TokenType.*;
 
 import org.junit.Test;
-import rhubarb.Token;
-import rhubarb.TokenScanner;
+import rhubarb.parser.Token;
+import rhubarb.parser.TokenScanner;
 import java.util.List;
 
 public class TestTokenScanner {

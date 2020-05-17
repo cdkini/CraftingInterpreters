@@ -1,8 +1,10 @@
-package rhubarb;
+package rhubarb.parser;
+
+import rhubarb.Rhubarb;
 
 import java.util.ArrayList;
 import java.util.List;
-import static rhubarb.TokenType.*;
+import static rhubarb.parser.TokenType.*;
 
 public class TokenScanner {
 

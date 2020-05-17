@@ -1,4 +1,4 @@
-package rhubarb;
+package rhubarb.parser;
 
 public class Token {
     final TokenType type;

@@ -1,5 +1,8 @@
 package rhubarb;
 
+import rhubarb.parser.Token;
+import rhubarb.parser.TokenScanner;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -79,7 +82,12 @@ public class Rhubarb {
         }
     }
 
-    static void error(int line, String message) {
+    /**
+     * Generic error handling that reports to the user the location of the error
+     * @param line -> Line the error occurred on
+     * @param message -> What to return to the user about the error
+     */
+    public static void error(int line, String message) {
         report(line, "", message);
     }
 
