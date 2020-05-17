@@ -13,6 +13,7 @@ public class TokenScanner {
     private int start; // First char in the lexeme being evaluated
     private int current; // Current char in the lexeme being evaluated
     private int line;
+    private boolean inComment;
 
     public TokenScanner(String source) {
         this.source = source;
@@ -20,6 +21,7 @@ public class TokenScanner {
         this.start = 0;
         this.current = 0;
         this.line = 1;
+        this.inComment = false;
     }
 
     /**
@@ -44,32 +46,72 @@ public class TokenScanner {
         switch (c) {
 
             // Single character tokens
-            case '(': addToken(LEFT_PAREN); break;
-            case ')': addToken(RIGHT_PAREN); break;
-            case '{': addToken(LEFT_BRACE); break;
-            case '}': addToken(RIGHT_BRACE); break;
-            case ',': addToken(COMMA); break;
-            case '.': addToken(DOT); break;
-            case '-': addToken(MINUS); break;
-            case '+': addToken(PLUS); break;
-            case ';': addToken(SEMICOLON); break;
-            case '*': addToken(STAR); break;
+            case '(':
+                addToken(LEFT_PAREN);
+                break;
+            case ')':
+                addToken(RIGHT_PAREN);
+                break;
+            case '{':
+                addToken(LEFT_BRACE);
+                break;
+            case '}':
+                addToken(RIGHT_BRACE);
+                break;
+            case ',':
+                addToken(COMMA);
+                break;
+            case '.':
+                addToken(DOT);
+                break;
+            case '-':
+                addToken(MINUS);
+                break;
+            case '+':
+                addToken(PLUS);
+                break;
+            case ';':
+                addToken(SEMICOLON);
+                break;
 
             // Tokens that can be either one or two characters
-            case '!': addToken(match('=') ? BANG_EQUAL: BANG); break;
-            case '=': addToken(match('=') ? EQUAL_EQUAL: EQUAL); break;
-            case '<': addToken(match('=') ? LESS_EQUAL: LESS); break;
-            case '>': addToken(match('=') ? GREATER_EQUAL: GREATER); break;
+            case '!':
+                addToken(match('=') ? BANG_EQUAL : BANG);
+                break;
+            case '=':
+                addToken(match('=') ? EQUAL_EQUAL : EQUAL);
+                break;
+            case '<':
+                addToken(match('=') ? LESS_EQUAL : LESS);
+                break;
+            case '>':
+                addToken(match('=') ? GREATER_EQUAL : GREATER);
+                break;
 
-            // If a comment (//), the rest of the line is advanced without being consumption
+            // If a comment, the rest of the line is advanced without being consumption
             case '/':
                 if (match('/')) {
-                    // A comment goes on until EOL
                     while (peek() != '\n' && current < source.length()) {
+                        advance();
+                    }
+                } else if (match('*')) {
+                    inComment = true;
+                    while ((peek() != '*' && peekNext() != '/') && current < source.length()) {
+                        if (peek() == '\n') {
+                            line++; // Disregard all characters but increment lines if we have a line break in comment
+                        }
                         advance();
                     }
                 } else {
                     addToken(SLASH);
+                }
+                break;
+            // Check to determine when multiline comment is closed, allowing subsequent characters to be scanned
+            case '*':
+                if (match('/') && inComment) {
+                    inComment = false;
+                } else {
+                    addToken(STAR);
                 }
                 break;
 

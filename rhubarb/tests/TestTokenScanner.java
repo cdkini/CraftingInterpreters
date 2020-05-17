@@ -12,12 +12,12 @@ public class TestTokenScanner {
 
     @Test
     public void testScanOfSingleCharacter() {
-        TokenScanner ts = new TokenScanner("((()");
+        TokenScanner ts = new TokenScanner("(((*)");
         List<Token> tokenList = ts.scanTokens();
-        assertEquals(5, tokenList.size());
+        assertEquals(6, tokenList.size());
         assertEquals(LEFT_PAREN, tokenList.get(0).getType());
-        assertEquals(RIGHT_PAREN, tokenList.get(3).getType());
-        assertEquals(EOF, tokenList.get(4).getType());
+        assertEquals(STAR, tokenList.get(3).getType());
+        assertEquals(EOF, tokenList.get(5).getType());
     }
 
     @Test
@@ -40,9 +40,17 @@ public class TestTokenScanner {
 
     @Test
     public void testScanOfComment() {
-        TokenScanner ts = new TokenScanner("//Text");
+        TokenScanner ts = new TokenScanner("// Text");
         List<Token> tokenList = ts.scanTokens();
         assertEquals(1, tokenList.size());
+    }
+
+    @Test
+    public void testScanOfMultiLineComment() {
+        TokenScanner ts = new TokenScanner("/* A \n comment */");
+        List<Token> tokenList = ts.scanTokens();
+        assertEquals(1, tokenList.size());
+        assertEquals(2, ts.getLine());
     }
 
     @Test
@@ -104,14 +112,14 @@ public class TestTokenScanner {
     }
 
     @Test
-    public void testScanOfSeriesOfLexemes1() {
-        TokenScanner ts = new TokenScanner("var x = 23 \n \t x == y + 1");
+    public void testScanOfSeriesOfLexemes() {
+        TokenScanner ts = new TokenScanner("/* docstring */ \n var x = 23 \n \t x == y + 1");
         List<Token> tokenList = ts.scanTokens();
         assertEquals(10, tokenList.size());
         assertEquals(VAR, ts.scanTokens().get(0).getType());
         assertEquals(EQUAL, ts.scanTokens().get(2).getType());
         assertEquals(NUMBER, ts.scanTokens().get(3).getType());
         assertEquals(PLUS, ts.scanTokens().get(7).getType());
-        assertEquals(2, ts.getLine());
+        assertEquals(3, ts.getLine());
     }
 }
