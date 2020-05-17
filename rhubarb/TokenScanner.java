@@ -2,6 +2,7 @@ package rhubarb;
 
 import java.util.ArrayList;
 import java.util.List;
+import static rhubarb.TokenType.*;
 
 public class TokenScanner {
 
@@ -11,7 +12,7 @@ public class TokenScanner {
     private int current; // Current char in the lexeme being evaluated
     private int line;
 
-    TokenScanner(String source) {
+    public TokenScanner(String source) {
         this.source = source;
         this.tokens = new ArrayList<>();
         this.start = 0;
@@ -24,34 +25,33 @@ public class TokenScanner {
             start = current;
             scan();
         }
-        tokens.add(new Token(TokenType.EOF, "", null, line));
+        tokens.add(new Token(EOF, "", null, line));
         return tokens;
     }
 
     private void scan() {
 
-        current++;
         char c = advance();
 
         switch (c) {
 
             // Single character tokens
-            case '(': addToken(TokenType.LEFT_PAREN); break;
-            case ')': addToken(TokenType.RIGHT_PAREN); break;
-            case '{': addToken(TokenType.LEFT_BRACE); break;
-            case '}': addToken(TokenType.RIGHT_BRACE); break;
-            case ',': addToken(TokenType.COMMA); break;
-            case '.': addToken(TokenType.DOT); break;
-            case '-': addToken(TokenType.MINUS); break;
-            case '+': addToken(TokenType.PLUS); break;
-            case ';': addToken(TokenType.SEMICOLON); break;
-            case '*': addToken(TokenType.STAR); break;
+            case '(': addToken(LEFT_PAREN); break;
+            case ')': addToken(RIGHT_PAREN); break;
+            case '{': addToken(LEFT_BRACE); break;
+            case '}': addToken(RIGHT_BRACE); break;
+            case ',': addToken(COMMA); break;
+            case '.': addToken(DOT); break;
+            case '-': addToken(MINUS); break;
+            case '+': addToken(PLUS); break;
+            case ';': addToken(SEMICOLON); break;
+            case '*': addToken(STAR); break;
 
             // Tokens that can be either one or two characters
-            case '!': addToken(match('=') ? TokenType.BANG_EQUAL: TokenType.BANG); break;
-            case '=': addToken(match('=') ? TokenType.EQUAL_EQUAL: TokenType.EQUAL); break;
-            case '<': addToken(match('=') ? TokenType.LESS_EQUAL: TokenType.LESS); break;
-            case '>': addToken(match('=') ? TokenType.GREATER_EQUAL: TokenType.GREATER); break;
+            case '!': addToken(match('=') ? BANG_EQUAL: BANG); break;
+            case '=': addToken(match('=') ? EQUAL_EQUAL: EQUAL); break;
+            case '<': addToken(match('=') ? LESS_EQUAL: LESS); break;
+            case '>': addToken(match('=') ? GREATER_EQUAL: GREATER); break;
 
             // If a comment (//), the rest of the line is advanced without being consumption
             case '/':
@@ -61,12 +61,12 @@ public class TokenScanner {
                         advance();
                     }
                 } else {
-                    addToken(TokenType.SLASH);
+                    addToken(SLASH);
                 }
                 break;
 
             // We don't care about whitespace so disregard if character is one of the following
-            case ' ':
+            case ' ': break;
             case '\r':
             case '\t': break;
             case '\n': line++; break;
@@ -101,7 +101,7 @@ public class TokenScanner {
     }
 
     private void addToken(TokenType type, Object literal) {
-        String text = source.substring(start, current);
+        String text = source.substring(start, current );
         tokens.add(new Token(type, text, literal, line));
     }
 
@@ -137,7 +137,7 @@ public class TokenScanner {
         }
         advance();
         String value = source.substring(start + 1, current - 1);
-        addToken(TokenType.STRING, value);
+        addToken(STRING, value);
     }
 
     private void number() {
@@ -150,7 +150,7 @@ public class TokenScanner {
                 advance();
             }
         }
-        addToken(TokenType.NUMBER, Double.parseDouble(source.substring(start, current)));
+        addToken(NUMBER, Double.parseDouble(source.substring(start, current)));
     }
 
     private void identifier() {
@@ -159,9 +159,13 @@ public class TokenScanner {
         }
         TokenType type = KeywordsDict.get(source.substring(start, current));
         if (type == null) {
-            addToken(TokenType.IDENTIFIER);
+            addToken(IDENTIFIER);
         } else {
             addToken(type);
         }
+    }
+
+    public int getLine() {
+        return line;
     }
 }
