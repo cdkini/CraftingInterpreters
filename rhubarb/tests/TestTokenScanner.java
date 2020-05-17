@@ -1,12 +1,11 @@
 package rhubarb.tests;
 
 import static org.junit.Assert.*;
+import static rhubarb.TokenType.*;
 
 import org.junit.Test;
 import rhubarb.Token;
 import rhubarb.TokenScanner;
-import static rhubarb.TokenType.*;
-
 import java.util.List;
 
 public class TestTokenScanner {
@@ -56,65 +55,63 @@ public class TestTokenScanner {
 
     @Test
     public void testScanOfValidString() {
-        TokenScanner ts = new TokenScanner("\"rhubarb\"");
-        List<Token> tokenList = ts.scanTokens();
-        assertEquals(2, tokenList.size());
-        assertEquals(IDENTIFIER, tokenList.get(0).getType());
+        // TODO: Fill out test (having trouble getting quotation marks to be recognized within test string)
     }
 
     @Test
     public void testScanOfInvalidString() {
-        // TODO: Fill out test
-        TokenScanner ts = new TokenScanner("\"rhubarb");
-        List<Token> tokenList = ts.scanTokens();
+        // TODO: Fill out test (having trouble getting quotation marks to be recognized within test string)
     }
 
     @Test
-    public void testScanOfNumber() {
-        // TODO: Fill out test
-        TokenScanner ts = new TokenScanner("");
+    public void testScanOfInteger() {
+        TokenScanner ts = new TokenScanner("123");
         List<Token> tokenList = ts.scanTokens();
+        assertEquals(2, tokenList.size());
+        assertEquals(NUMBER, ts.scanTokens().get(0).getType());
+    }
+
+    @Test
+    public void testScanOfFloat() {
+        TokenScanner ts = new TokenScanner("3.1415");
+        List<Token> tokenList = ts.scanTokens();
+        assertEquals(2, tokenList.size());
+        assertEquals(NUMBER, ts.scanTokens().get(0).getType());
     }
 
     @Test
     public void testScanOfKeyword() {
-        // TODO: Fill out test
-        TokenScanner ts = new TokenScanner("");
+        TokenScanner ts = new TokenScanner("var");
         List<Token> tokenList = ts.scanTokens();
+        assertEquals(2, tokenList.size());
+        assertEquals(VAR, ts.scanTokens().get(0).getType());
     }
 
     @Test
     public void testScanOfVariableName() {
-        // TODO: Fill out test
-        TokenScanner ts = new TokenScanner("");
+        TokenScanner ts = new TokenScanner("python");
         List<Token> tokenList = ts.scanTokens();
+        assertEquals(2, tokenList.size());
+        assertEquals(IDENTIFIER, ts.scanTokens().get(0).getType());
     }
 
     @Test
     public void testScanOfInvalidCharacter() {
-        // TODO: Fill out test
-        TokenScanner ts = new TokenScanner("");
+        TokenScanner ts = new TokenScanner("`");
         List<Token> tokenList = ts.scanTokens();
+        assertEquals(1, tokenList.size());
+        assertEquals(EOF, ts.scanTokens().get(0).getType());
     }
 
     @Test
     public void testScanOfSeriesOfLexemes1() {
-        // TODO: Fill out test
-        TokenScanner ts = new TokenScanner("");
+        TokenScanner ts = new TokenScanner("var x = 23 \n \t x == y + 1");
         List<Token> tokenList = ts.scanTokens();
-    }
-
-    @Test
-    public void testScanOfSeriesOfLexemes2() {
-        // TODO: Fill out test
-        TokenScanner ts = new TokenScanner("");
-        List<Token> tokenList = ts.scanTokens();
-    }
-
-    @Test
-    public void testScanOfSeriesOfLexemes3() {
-        // TODO: Fill out test
-        TokenScanner ts = new TokenScanner("");
-        List<Token> tokenList = ts.scanTokens();
+        assertEquals(10, tokenList.size());
+        assertEquals(VAR, ts.scanTokens().get(0).getType());
+        assertEquals(EQUAL, ts.scanTokens().get(2).getType());
+        assertEquals(NUMBER, ts.scanTokens().get(3).getType());
+        assertEquals(PLUS, ts.scanTokens().get(7).getType());
+        assertEquals(2, ts.getLine());
     }
 }
