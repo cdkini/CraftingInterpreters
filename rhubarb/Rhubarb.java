@@ -12,6 +12,12 @@ public class Rhubarb {
 
     private static boolean hadError = false;
 
+    /**
+     * Allows the user to run a file through the interpreter or create an interactive session in the command line.
+     * Additionally, there is an option to format files based on the language's stylistic preferences.
+     * @param args -> Command line arguments passed by user (either nothing, script name, or fmt and script name)
+     * @throws IOException -> If the file or file path passed is not valid
+     */
     public static void main(String[] args) throws IOException {
         if (args.length > 2) {
             System.out.println("Error: Must use one of the following: \n" +

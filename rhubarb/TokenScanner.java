@@ -20,6 +20,10 @@ public class TokenScanner {
         this.line = 1;
     }
 
+    /**
+     * Generates a list of tokens from a given source and assigns them to this..tokens
+     * @return An ArrayList of tokens (this.tokens)
+     */
     public List<Token> scanTokens() {
         while (current < source.length()) {
             start = current;
@@ -29,10 +33,12 @@ public class TokenScanner {
         return tokens;
     }
 
+    /**
+     * The bulk of our scanner class, this helper method helps assign
+     * sequences of characters to their appropriate TokenType.
+     */
     private void scan() {
-
         char c = advance();
-
         switch (c) {
 
             // Single character tokens
