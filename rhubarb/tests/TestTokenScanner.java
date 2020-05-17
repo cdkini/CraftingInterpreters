@@ -46,11 +46,19 @@ public class TestTokenScanner {
     }
 
     @Test
-    public void testScanOfMultiLineComment() {
-        TokenScanner ts = new TokenScanner("/* A \n comment */");
+    public void testScanOfMultiLineComment1() {
+        TokenScanner ts = new TokenScanner("/* \n * Comment \n */");
         List<Token> tokenList = ts.scanTokens();
         assertEquals(1, tokenList.size());
-        assertEquals(2, ts.getLine());
+        assertEquals(3, ts.getLine());
+    }
+
+    @Test
+    public void testScanOfMultiLineComment2() {
+        TokenScanner ts = new TokenScanner("/* \n * A \n * B \n * C \n */");
+        List<Token> tokenList = ts.scanTokens();
+        assertEquals(1, tokenList.size());
+        assertEquals(5, ts.getLine());
     }
 
     @Test

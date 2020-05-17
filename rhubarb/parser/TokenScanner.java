@@ -73,6 +73,8 @@ public class TokenScanner {
             case ';':
                 addToken(SEMICOLON);
                 break;
+            case '*':
+                addToken(STAR);
 
             // Tokens that can be either one or two characters
             case '!':
@@ -95,23 +97,17 @@ public class TokenScanner {
                         advance();
                     }
                 } else if (match('*')) {
-                    inComment = true;
-                    while ((peek() != '*' && peekNext() != '/') && current < source.length()) {
-                        if (peek() == '\n') {
+                    // TODO: Fix multiline comment terminating condition
+                    while (current < source.length()) {
+                        if (peek() == '*' && peekNext() == '/') {
+                            advance();
+                        } else if (peek() == '\n') {
                             line++; // Disregard all characters but increment lines if we have a line break in comment
                         }
                         advance();
                     }
                 } else {
                     addToken(SLASH);
-                }
-                break;
-            // Check to determine when multiline comment is closed, allowing subsequent characters to be scanned
-            case '*':
-                if (match('/') && inComment) {
-                    inComment = false;
-                } else {
-                    addToken(STAR);
                 }
                 break;
 
