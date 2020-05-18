@@ -1,4 +1,4 @@
-package okra.tests;
+package okra.parser.tests;
 
 import static org.junit.Assert.*;
 import static okra.parser.TokenType.*;
