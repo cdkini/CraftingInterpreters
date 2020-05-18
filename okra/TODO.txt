@@ -1,0 +1,4 @@
+TODO:
+- Proper error handling
+- File formatter (and method for recursive directory formatting)
+- Standard library

@@ -1,10 +1,10 @@
-package rhubarb.parser;
+package okra.parser;
 
-import rhubarb.Rhubarb;
+import okra.core.Okra;
 
 import java.util.ArrayList;
 import java.util.List;
-import static rhubarb.parser.TokenType.*;
+import static okra.parser.TokenType.*;
 
 public class TokenScanner {
 
@@ -128,7 +128,7 @@ public class TokenScanner {
                 } else if (Character.isAlphabetic(c)) {
                     identifier();
                 } else {
-                    Rhubarb.error(line, "Invalid character.");
+                    Okra.error(line, "Invalid character.");
                     break;
                 }
         }
@@ -178,7 +178,7 @@ public class TokenScanner {
             }
         }
         if (current >= source.length()) {
-            Rhubarb.error(line, "Unterminated string.");
+            Okra.error(line, "Unterminated string.");
             return;
         }
         advance();

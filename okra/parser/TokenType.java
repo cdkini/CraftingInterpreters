@@ -1,4 +1,4 @@
-package rhubarb.parser;
+package okra.parser;
 
 public enum TokenType {
     // Single-character tokens.
