@@ -15,7 +15,7 @@ public class TestTokenScanner {
         TokenScanner ts = new TokenScanner("(((*)");
         List<Token> tokenList = ts.scanTokens();
         assertEquals(6, tokenList.size());
-        assertEquals(LEFT_PAREN, tokenList.get(0).getType());
+        assertEquals(LPAREN, tokenList.get(0).getType());
         assertEquals(STAR, tokenList.get(3).getType());
         assertEquals(EOF, tokenList.get(5).getType());
     }
@@ -108,7 +108,7 @@ public class TestTokenScanner {
         TokenScanner ts = new TokenScanner("python");
         List<Token> tokenList = ts.scanTokens();
         assertEquals(2, tokenList.size());
-        assertEquals(IDENTIFIER, ts.scanTokens().get(0).getType());
+        assertEquals(ID, ts.scanTokens().get(0).getType());
     }
 
     @Test

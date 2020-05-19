@@ -2,7 +2,7 @@ package src.parser;
 
 public enum TokenType {
     // Single-character tokens.
-    L_PAREN, R_PAREN, L_BRACE, R_BRACE, L_BRACK, R_BRACK,
+    LPAREN, RPAREN, LBRACE, RBRACE, LBRACK, RBRACK,
     COMMA, DOT, MINUS, PLUS, SEMICOLON, SLASH,
 
     // One or two character tokens.
@@ -12,7 +12,7 @@ public enum TokenType {
     LESS, LESS_EQUAL, STAR,
 
     // Literals.
-    IDENTIFIER, STRING, NUMBER,
+    ID, STRING, NUMBER,
 
     // Keywords.
     AND, CLASS, ELSE, FALSE, FUNC, FOR, IF, NULL, OR,

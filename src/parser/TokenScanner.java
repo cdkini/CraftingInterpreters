@@ -47,22 +47,22 @@ public class TokenScanner {
 
             // Single character tokens
             case '(':
-                addToken(L_PAREN);
+                addToken(LPAREN);
                 break;
             case ')':
-                addToken(R_PAREN);
+                addToken(RPAREN);
                 break;
             case '{':
-                addToken(L_BRACE);
+                addToken(LBRACE);
                 break;
             case '}':
-                addToken(R_BRACE);
+                addToken(RBRACE);
                 break;
             case '[':
-                addToken(L_BRACK);
+                addToken(LBRACK);
                 break;
             case ']':
-                addToken(R_BRACK);
+                addToken(RBRACK);
                 break;
             case ',':
                 addToken(COMMA);
@@ -217,7 +217,7 @@ public class TokenScanner {
         }
         TokenType type = KeywordsDict.get(source.substring(start, current));
         if (type == null) {
-            addToken(IDENTIFIER);
+            addToken(ID);
         } else {
             addToken(type);
         }
