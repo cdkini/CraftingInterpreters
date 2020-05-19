@@ -34,7 +34,7 @@ public class Okra {
             }
             Format.fmt(new File(args[1]));
         } else if (args.length == 1) {
-            if (!isValidFileExtension(args[0]) || !isValidFilePath(args[0])) {
+            if (!isValidFileExtension(args[0])) {
                 System.out.println("Error: Must use .okra file extension");
                 System.exit(-1);
             }
@@ -45,8 +45,8 @@ public class Okra {
             runFile(args[0]);
         } else {
             System.out.println("Error: Must use one of the following: \n" +
-                    "1) \"okra [script]\" to run a .okra file \n" +
-                    "2) \"okra fmt [script]\" to format a .okra file");
+                    "1) \"okra [script]\" to run an .okra file \n" +
+                    "2) \"okra fmt [script]\" to format an .okra file");
             System.exit(-1);
         }
     }

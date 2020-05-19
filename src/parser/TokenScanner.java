@@ -47,16 +47,22 @@ public class TokenScanner {
 
             // Single character tokens
             case '(':
-                addToken(LEFT_PAREN);
+                addToken(L_PAREN);
                 break;
             case ')':
-                addToken(RIGHT_PAREN);
+                addToken(R_PAREN);
                 break;
             case '{':
-                addToken(LEFT_BRACE);
+                addToken(L_BRACE);
                 break;
             case '}':
-                addToken(RIGHT_BRACE);
+                addToken(R_BRACE);
+                break;
+            case '[':
+                addToken(L_BRACK);
+                break;
+            case ']':
+                addToken(R_BRACK);
                 break;
             case ',':
                 addToken(COMMA);

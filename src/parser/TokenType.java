@@ -2,7 +2,7 @@ package src.parser;
 
 public enum TokenType {
     // Single-character tokens.
-    LEFT_PAREN, RIGHT_PAREN, LEFT_BRACE, RIGHT_BRACE,
+    L_PAREN, R_PAREN, L_BRACE, R_BRACE, L_BRACK, R_BRACK,
     COMMA, DOT, MINUS, PLUS, SEMICOLON, SLASH,
 
     // One or two character tokens.

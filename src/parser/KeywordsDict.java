@@ -2,27 +2,28 @@ package src.parser;
 
 import java.util.HashMap;
 import java.util.Map;
+import static src.parser.TokenType.*;
 
 public class KeywordsDict {
 
     private static final Map<String, TokenType> keywords;
     static {
         keywords = new HashMap<>();
-        keywords.put("and", TokenType.AND);
-        keywords.put("class", TokenType.CLASS);
-        keywords.put("else", TokenType.ELSE);
-        keywords.put("false", TokenType.FALSE);
-        keywords.put("for", TokenType.FOR);
-        keywords.put("func", TokenType.FUNC);
-        keywords.put("if", TokenType.IF);
-        keywords.put("null", TokenType.NULL);
-        keywords.put("or", TokenType.OR);
-        keywords.put("print", TokenType.PRINT);
-        keywords.put("return", TokenType.RETURN);
-        keywords.put("super", TokenType.SUPER);
-        keywords.put("this", TokenType.THIS);
-        keywords.put("true", TokenType.TRUE);
-        keywords.put("var", TokenType.VAR);
+        keywords.put("and", AND);
+        keywords.put("class", CLASS);
+        keywords.put("else", ELSE);
+        keywords.put("false", FALSE);
+        keywords.put("for", FOR);
+        keywords.put("func", FUNC);
+        keywords.put("if", IF);
+        keywords.put("null", NULL);
+        keywords.put("or", OR);
+        keywords.put("print", PRINT);
+        keywords.put("return", RETURN);
+        keywords.put("super", SUPER);
+        keywords.put("this", THIS);
+        keywords.put("true", TRUE);
+        keywords.put("var", VAR);
     }
 
     public static TokenType get(String key) {
