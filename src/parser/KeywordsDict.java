@@ -23,7 +23,6 @@ public class KeywordsDict {
         keywords.put("this", TokenType.THIS);
         keywords.put("true", TokenType.TRUE);
         keywords.put("var", TokenType.VAR);
-        keywords.put("while", TokenType.WHILE);
     }
 
     public static TokenType get(String key) {
