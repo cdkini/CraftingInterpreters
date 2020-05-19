@@ -16,19 +16,13 @@ public class Okra {
     private static boolean hadError = false;
 
     /**
-     * Allows the user to run a file through the interpreter or create an interactive session in the command line.
+     * Allows the user to run a file through the interpreter.
      * Additionally, there is an option to format files based on the language's stylistic preferences.
-     * @param args -> Command line arguments passed by user (either nothing, script name, or fmt and script name)
+     * @param args -> Command line arguments passed by user (either script name, or fmt and script name)
      * @throws IOException -> If the file or file path passed is not valid
      */
     public static void main(String[] args) throws IOException {
-        if (args.length > 2) {
-            System.out.println("Error: Must use one of the following: \n" +
-                    "1) \"okra [script]\" to run a .okra file \n" +
-                    "2) \"okra\" to run an interactive session in the terminal \n" +
-                    "3) \"okra fmt [script]\" to format a .okra file");
-            System.exit(-1);
-        } else if (args.length == 2) {
+        if (args.length == 2) {
             if (!getFileExtension(args[0]).equals("fmt") || !getFileExtension(args[1]).equals("src")) {
                 System.out.println("Error: Must use \"okra fmt [script]\" to format a .okra file");
                 System.exit(-1);
@@ -42,7 +36,10 @@ public class Okra {
             }
             runFile(args[0]);
         } else {
-            runPrompt();
+            System.out.println("Error: Must use one of the following: \n" +
+                    "1) \"okra [script]\" to run a .okra file \n" +
+                    "2) \"okra fmt [script]\" to format a .okra file");
+            System.exit(-1);
         }
     }
 
@@ -59,17 +56,6 @@ public class Okra {
 
         if (hadError) {
             System.exit(-1);
-        }
-    }
-
-    private static void runPrompt() throws IOException {
-        InputStreamReader input = new InputStreamReader(System.in);
-        BufferedReader reader = new BufferedReader(input);
-
-        while (true) { // Need to use Ctrl + C to escape
-            System.out.println("> ");
-            run(reader.readLine());
-            hadError = false;
         }
     }
 
