@@ -38,7 +38,7 @@ public class Okra {
                 System.out.println("Error: Must use .okra file extension");
                 System.exit(-1);
             }
-            if (!isValidFilePath(args[1])) {
+            if (!isValidFilePath(args[0])) {
                 System.out.println("Error: Not a valid file path.");
                 System.exit(-1);
             }

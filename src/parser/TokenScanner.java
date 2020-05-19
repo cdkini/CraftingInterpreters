@@ -4,6 +4,7 @@ import src.Okra;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import static src.parser.TokenType.*;
 
 public class TokenScanner {
@@ -13,7 +14,6 @@ public class TokenScanner {
     private int start; // First char in the lexeme being evaluated
     private int current; // Current char in the lexeme being evaluated
     private int line;
-    private boolean inComment;
 
     public TokenScanner(String source) {
         this.source = source;
@@ -21,11 +21,11 @@ public class TokenScanner {
         this.start = 0;
         this.current = 0;
         this.line = 1;
-        this.inComment = false;
     }
 
     /**
      * Generates a list of tokens from a given source and assigns them to this..tokens
+     *
      * @return An ArrayList of tokens (this.tokens)
      */
     public List<Token> scanTokens() {
@@ -75,8 +75,9 @@ public class TokenScanner {
                 break;
             case '*':
                 addToken(STAR);
+                break;
 
-            // Tokens that can be either one or two characters
+                // Tokens that can be either one or two characters
             case '!':
                 addToken(match('=') ? BANG_EQUAL : BANG);
                 break;
@@ -97,10 +98,11 @@ public class TokenScanner {
                         advance();
                     }
                 } else if (match('*')) {
-                    // TODO: Fix multiline comment terminating condition
                     while (current < source.length()) {
                         if (peek() == '*' && peekNext() == '/') {
                             advance();
+                            advance();
+                            break;
                         } else if (peek() == '\n') {
                             line++; // Disregard all characters but increment lines if we have a line break in comment
                         }
@@ -112,10 +114,14 @@ public class TokenScanner {
                 break;
 
             // We don't care about whitespace so disregard if character is one of the following
-            case ' ': break;
+            case ' ':
+                break;
             case '\r':
-            case '\t': break;
-            case '\n': line++; break;
+            case '\t':
+                break;
+            case '\n':
+                line++;
+                break;
 
             // Remainder are delegated to string/number specific helper methods or error handling
             case '"':
@@ -147,7 +153,7 @@ public class TokenScanner {
     }
 
     private void addToken(TokenType type, Object literal) {
-        String text = source.substring(start, current );
+        String text = source.substring(start, current);
         tokens.add(new Token(type, text, literal, line));
     }
 

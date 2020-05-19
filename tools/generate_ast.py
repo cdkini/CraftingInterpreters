@@ -1,6 +1,5 @@
 import sys
 
-t = "\t"
 
 def define_type(base_name, class_name, fields, path):
     """
@@ -19,7 +18,6 @@ def define_type(base_name, class_name, fields, path):
         for i, field in enumerate(fields):
             f.write(f"        final {field};" + "\n")
         f.write("  " + "}\n\n")
-        
 
 
 def define_AST(directory, base_name, types):
@@ -37,9 +35,6 @@ def define_AST(directory, base_name, types):
         define_type(base_name, class_name.strip(), fields.strip(), path)
 
 
-        
-
-
 def main():
     if len(sys.argv) != 2:
         print("Error: Please pass the directory you wish to output to.")
@@ -53,7 +48,6 @@ def main():
             "Unary: Token operator, Expression right"
         ] 
     )
-    
 
 
 if __name__ == "__main__":
