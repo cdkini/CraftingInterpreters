@@ -24,15 +24,25 @@ public class Okra {
      */
     public static void main(String[] args) throws IOException {
         if (args.length == 2) {
-            if (!args[0].equals("fmt") || !isValidFileExtension(args[1])) {
-                System.out.println("Error: Must use \"okra fmt [script]\" to format an .okra file");
+            if (!args[0].endsWith("fmt") || !isValidFilePath(args[1]) || !isValidDirectoryPath(args[1])) {
+                System.out.println("Error: Must use one of the following: \n" +
+                        "~ \"okra fmt [script]\" to format an .okra file \n" +
+                        "~ \"okra --fmt [script]\" to format and subsequently run an .okra file");
                 System.exit(-1);
             }
-            if (!isValidFilePath(args[1])) {
-                System.out.println("Error: Not a valid file path.");
-                System.exit(-1);
+            if (args[0].equals("fmt")) {
+                Format.fmt(new File(args[1]));
+                System.exit(0);
             }
-            Format.fmt(new File(args[1]));
+            if (args[1].equals("--fmt")) {
+                if (isValidDirectoryPath(args[1])) {
+                    System.out.println("Error: Cannot use --fmt flag due to argument being a directory");
+                    System.exit(-1);
+                }
+                Format.fmt(new File(args[1]));
+                runFile(args[1]);
+                System.exit(0);
+            }
         } else if (args.length == 1) {
             if (!isValidFileExtension(args[0])) {
                 System.out.println("Error: Must use .okra file extension");
@@ -43,22 +53,24 @@ public class Okra {
                 System.exit(-1);
             }
             runFile(args[0]);
+            System.exit(0);
         } else {
             System.out.println("Error: Must use one of the following: \n" +
-                    "1) \"okra [script]\" to run an .okra file \n" +
-                    "2) \"okra fmt [script]\" to format an .okra file");
+                    "~ \"okra [script]\" to run an .okra file \n" +
+                    "~ \"okra fmt [script]\" to format an .okra file \n" +
+                    "~ \"okra --fmt [script]\" to format and subsequently run an .okra file");
             System.exit(-1);
         }
     }
 
     private static boolean isValidFilePath(String path) {
         File f = new File(path);
-        try {
-            f.getCanonicalPath();
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
+        return f.isFile();
+    }
+
+    private static boolean isValidDirectoryPath(String path) {
+        File f = new File(path);
+        return f.isDirectory();
     }
 
     private static boolean isValidFileExtension(String script) {
