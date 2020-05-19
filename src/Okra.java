@@ -1,7 +1,7 @@
-package okra.core;
+package src;
 
-import okra.parser.Token;
-import okra.parser.TokenScanner;
+import src.parser.Token;
+import src.parser.TokenScanner;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -29,14 +29,14 @@ public class Okra {
                     "3) \"okra fmt [script]\" to format a .okra file");
             System.exit(-1);
         } else if (args.length == 2) {
-            if (!getFileExtension(args[0]).equals("fmt") || !getFileExtension(args[1]).equals("okra")) {
+            if (!getFileExtension(args[0]).equals("fmt") || !getFileExtension(args[1]).equals("src")) {
                 System.out.println("Error: Must use \"okra fmt [script]\" to format a .okra file");
                 System.exit(-1);
             }
             // TODO: Open to implement formatting tool once completion of basic language / style rules
             System.out.println("fmt not yet implemented!");
         } else if (args.length == 1) {
-            if (!getFileExtension(args[0]).equals("okra")) {
+            if (!getFileExtension(args[0]).equals("src")) {
                 System.out.println("Error: Must use .okra file extension");
                 System.exit(-1);
             }

@@ -1,11 +1,11 @@
-package okra.parser.tests;
+package src.parser.tests;
 
 import static org.junit.Assert.*;
-import static okra.parser.TokenType.*;
+import static src.parser.TokenType.*;
 
 import org.junit.Test;
-import okra.parser.Token;
-import okra.parser.TokenScanner;
+import src.parser.Token;
+import src.parser.TokenScanner;
 import java.util.List;
 
 public class TestTokenScanner {

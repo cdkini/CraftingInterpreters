@@ -1,10 +1,10 @@
-package okra.parser;
+package src.parser;
 
-import okra.core.Okra;
+import src.Okra;
 
 import java.util.ArrayList;
 import java.util.List;
-import static okra.parser.TokenType.*;
+import static src.parser.TokenType.*;
 
 public class TokenScanner {
 

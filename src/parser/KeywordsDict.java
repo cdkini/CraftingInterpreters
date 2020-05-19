@@ -1,4 +1,4 @@
-package okra.parser;
+package src.parser;
 
 import java.util.HashMap;
 import java.util.Map;

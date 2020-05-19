@@ -1,4 +1,4 @@
-package okra.parser;
+package src.parser;
 
 public enum TokenType {
     // Single-character tokens.

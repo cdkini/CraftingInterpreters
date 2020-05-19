@@ -10,7 +10,7 @@ def define_type(base_name, class_name, fields, path):
 def define_AST(directory, base_name, types):
     path = f"{directory}/{base_name}.java"
     with open(path, "w") as f:
-        f.write("package okra;\n")
+        f.write("package src;\n")
         f.write("import java.util.List;\n")
         f.write(f"abstract class {base_name} {\n")
         f.write("}")

@@ -1,4 +1,4 @@
-package okra.fmt;
+package src.fmt;
 
 public class FileFormatter {
     // TODO: Implement static methods to format files and directories

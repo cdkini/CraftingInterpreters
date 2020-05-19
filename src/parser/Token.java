@@ -1,4 +1,4 @@
-package okra.parser;
+package src.parser;
 
 public class Token {
     final TokenType type;
