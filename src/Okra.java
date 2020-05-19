@@ -1,11 +1,11 @@
 package src;
 
+import src.fmt.Format;
 import src.parser.Token;
 import src.parser.TokenScanner;
 
-import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -18,20 +18,28 @@ public class Okra {
     /**
      * Allows the user to run a file through the interpreter.
      * Additionally, there is an option to format files based on the language's stylistic preferences.
+     *
      * @param args -> Command line arguments passed by user (either script name, or fmt and script name)
      * @throws IOException -> If the file or file path passed is not valid
      */
     public static void main(String[] args) throws IOException {
         if (args.length == 2) {
-            if (!getFileExtension(args[0]).equals("fmt") || !getFileExtension(args[1]).equals("src")) {
-                System.out.println("Error: Must use \"okra fmt [script]\" to format a .okra file");
+            if (!args[0].equals("fmt") || !isValidFileExtension(args[1])) {
+                System.out.println("Error: Must use \"okra fmt [script]\" to format an .okra file");
                 System.exit(-1);
             }
-            // TODO: Open to implement formatting tool once completion of basic language / style rules
-            System.out.println("fmt not yet implemented!");
+            if (!isValidFilePath(args[1])) {
+                System.out.println("Error: Not a valid file path.");
+                System.exit(-1);
+            }
+            Format.fmt(new File(args[1]));
         } else if (args.length == 1) {
-            if (!getFileExtension(args[0]).equals("src")) {
+            if (!isValidFileExtension(args[0]) || !isValidFilePath(args[0])) {
                 System.out.println("Error: Must use .okra file extension");
+                System.exit(-1);
+            }
+            if (!isValidFilePath(args[1])) {
+                System.out.println("Error: Not a valid file path.");
                 System.exit(-1);
             }
             runFile(args[0]);
@@ -43,34 +51,41 @@ public class Okra {
         }
     }
 
-    private static String getFileExtension(String script) {
-        if (script.lastIndexOf(".") != -1 && script.lastIndexOf(".") != 0) {
-            return script.substring(script.lastIndexOf(".") + 1);
+    private static boolean isValidFilePath(String path) {
+        File f = new File(path);
+        try {
+            f.getCanonicalPath();
+            return true;
+        } catch (IOException e) {
+            return false;
         }
-        return "";
+    }
+
+    private static boolean isValidFileExtension(String script) {
+        if (script.lastIndexOf(".") != -1 && script.lastIndexOf(".") != 0) {
+            return script.substring(script.lastIndexOf(".") + 1).equals("okra");
+        }
+        return false;
     }
 
     private static void runFile(String path) throws IOException {
         byte[] bytes = Files.readAllBytes(Paths.get(path));
-        run(new String(bytes, Charset.defaultCharset()));
+        TokenScanner tokenScanner = new TokenScanner(new String(bytes, Charset.defaultCharset()));
+        List<Token> tokens = tokenScanner.scanTokens();
+
+        for (Token token : tokens) {
+            System.out.println(token);
+        }
 
         if (hadError) {
             System.exit(-1);
         }
     }
 
-    private static void run(String source) {
-        TokenScanner tokenScanner = new TokenScanner(source);
-        List<Token> tokens = tokenScanner.scanTokens();
-
-        for (Token token: tokens) {
-            System.out.println(token);
-        }
-    }
-
     /**
      * Generic error handling that reports to the user the location of the error
-     * @param line -> Line the error occurred on
+     *
+     * @param line    -> Line the error occurred on
      * @param message -> What to return to the user about the error
      */
     public static void error(int line, String message) {
