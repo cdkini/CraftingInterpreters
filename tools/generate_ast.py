@@ -20,6 +20,11 @@ def define_type(base_name, class_name, fields, path):
         f.write("  " + "}\n\n")
 
 
+def define_visitor(base_name, types, path):
+    with open(path, "a"):
+        pass
+
+
 def define_AST(directory, base_name, types):
     """
     TODO: Fill in docstring
@@ -29,6 +34,8 @@ def define_AST(directory, base_name, types):
         f.write("package src;" + "\n\n")
         f.write("import java.util.List;" + "\n\n")
         f.write(f"abstract class {base_name} " + "{\n\n")
+
+    define_visitor(base_name, types, path)
 
     for t in types:
         class_name, fields = t.split(":")
